@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,5 +24,17 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
+
+    // ROLES & PERMISSIONS
+    Route::group(['middleware' => ['apiJwt']], function() {
+        Route::resource('products', ProductController::class);
+
+        Route::post('role/create', [RoleController::class, 'store']);
+        Route::post('role/update',[ RoleController::class, 'update']);
+
+        Route::get('users', [UserController::class, 'index']);
+        Route::post('user/create', [UserController::class, 'store']);
+        Route::post ('user/update', [UserController::class, 'update']);
+    });
 
 });
